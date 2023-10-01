@@ -1,13 +1,10 @@
-<%@ page import="java.util.*, com.example.web.jdbc.*" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
     <title>Student Tracker App</title>
     <link type="text/css" rel="stylesheet" href="css/style.css">
 </head>
-<%
-    List<Student> theStudents = (List<Student>) request.getAttribute("student_list");
-%>
 <body>
     <div id="wrapper">
         <div id="header">
@@ -22,13 +19,14 @@
                     <th>Last Name</th>
                     <th>Email</th>
                 </tr>
-                <% for (Student tempStudent : theStudents) { %>
+                <jsp:useBean id="student_list" scope="request" type="java.util.List"/>
+                <c:forEach var="tempStudent" items="${student_list}">
                     <tr>
-                        <td><%= tempStudent.getFirstName() %></td>
-                        <td><%= tempStudent.getLastName() %></td>
-                        <td><%= tempStudent.getEmail() %></td>
+                        <td>${tempStudent.firstName}</td>
+                        <td>${tempStudent.lastName}</td>
+                        <td>${tempStudent.email}</td>
                     </tr>
-                <% } %>
+                </c:forEach>
             </table>
         </div>
     </div>
