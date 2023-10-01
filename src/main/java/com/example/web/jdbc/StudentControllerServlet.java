@@ -11,7 +11,7 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "StudentControllerServlet", value = "/student-controller-servlet")
+@WebServlet(name = "StudentControllerServlet", value = "/students")
 public class StudentControllerServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private StudentDbUtil studentDbUtil;

@@ -3,6 +3,7 @@
 <html>
 <head>
     <title>Student Tracker App</title>
+    <link type="text/css" rel="stylesheet" href="css/style.css">
 </head>
 <%
     List<Student> theStudents = (List<Student>) request.getAttribute("student_list");
