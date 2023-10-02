@@ -30,10 +30,33 @@ public class StudentControllerServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         try {
-            listStudents(request, response);
+            String theCommand = request.getParameter("command");
+            if (theCommand == null) {
+                theCommand = "LIST";
+            }
+            switch (theCommand) {
+                case "LIST":
+                    listStudents(request, response);
+                    break;
+                case "ADD":
+                    addStudents(request, response);
+                    break;
+                default:
+                    listStudents(request, response);
+            }
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void addStudents(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String firstName = request.getParameter("firstName");
+        String lastName = request.getParameter("lastName");
+        String email = request.getParameter("email");
+        Student theStudent = new Student(firstName, lastName, email);
+        studentDbUtil.addStudent(theStudent);
+        listStudents(request, response);
     }
 
     private void listStudents(HttpServletRequest request, HttpServletResponse response)
