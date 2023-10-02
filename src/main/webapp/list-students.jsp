@@ -1,4 +1,4 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,7 +8,7 @@
 <body>
     <div id="wrapper">
         <div id="header">
-            <h2>Foobar University</h2>
+            <h2>FooBar University</h2>
         </div>
     </div>
     <div id="container">
@@ -19,12 +19,11 @@
                     <th>Last Name</th>
                     <th>Email</th>
                 </tr>
-                <jsp:useBean id="student_list" scope="request" type="java.util.List"/>
-                <c:forEach var="tempStudent" items="${student_list}">
+                <c:forEach var="tempStudent" items="${requestScope.STUDENT_LIST}">
                     <tr>
-                        <td>${tempStudent.firstName}</td>
-                        <td>${tempStudent.lastName}</td>
-                        <td>${tempStudent.email}</td>
+                        <td> ${tempStudent.firstName} </td>
+                        <td> ${tempStudent.lastName} </td>
+                        <td> ${tempStudent.email} </td>
                     </tr>
                 </c:forEach>
             </table>

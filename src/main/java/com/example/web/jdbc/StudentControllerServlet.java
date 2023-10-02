@@ -8,15 +8,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
-import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "StudentControllerServlet", value = "/students")
+@WebServlet("/StudentControllerServlet")
 public class StudentControllerServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private StudentDbUtil studentDbUtil;
 
-    @Resource(name = "jdbc/web_student_tracker")
+    @Resource(name="jdbc/web_student_tracker")
     private DataSource dataSource;
 
     @Override
@@ -24,22 +23,23 @@ public class StudentControllerServlet extends HttpServlet {
         super.init();
         try {
             studentDbUtil = new StudentDbUtil(dataSource);
-        } catch (Exception e) {
-            throw new ServletException(e);
+        } catch (Exception exc) {
+            throw new ServletException(exc);
         }
     }
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         try {
             listStudents(request, response);
         } catch (Exception e) {
-            throw new ServletException(e);
+            throw new RuntimeException(e);
         }
     }
 
-    private void listStudents(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    private void listStudents(HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
         List<Student> students = studentDbUtil.getStudents();
-        request.setAttribute("student_list", students);
+        request.setAttribute("STUDENT_LIST", students);
         RequestDispatcher dispatcher = request.getRequestDispatcher("/list-students.jsp");
         dispatcher.forward(request, response);
     }
