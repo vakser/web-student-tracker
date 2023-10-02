@@ -1,9 +1,7 @@
 package com.example.web.jdbc;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,6 +53,20 @@ public class StudentDbUtil {
     }
 
     public void addStudent(Student theStudent) {
-
+        Connection connection = null;
+        PreparedStatement statement = null;
+        try {
+            connection = dataSource.getConnection();
+            String sql = "insert into student (first_name, last_name, email) values (?, ?, ?)";
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, theStudent.getFirstName());
+            statement.setString(2, theStudent.getLastName());
+            statement.setString(3, theStudent.getEmail());
+            statement.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            close(connection, statement, null);
+        }
     }
 }
