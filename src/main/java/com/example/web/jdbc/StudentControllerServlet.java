@@ -41,6 +41,9 @@ public class StudentControllerServlet extends HttpServlet {
                 case "ADD":
                     addStudents(request, response);
                     break;
+                case "LOAD":
+                    loadStudent(request, response);
+                    break;
                 default:
                     listStudents(request, response);
             }
@@ -48,6 +51,14 @@ public class StudentControllerServlet extends HttpServlet {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void loadStudent(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String theStudentId = request.getParameter("studentId");
+        Student student = studentDbUtil.getStudent(theStudentId);
+        request.setAttribute("STUDENT", student);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/update-student-form.jsp");
+        dispatcher.forward(request, response);
     }
 
     private void addStudents(HttpServletRequest request, HttpServletResponse response) throws Exception {

@@ -69,4 +69,31 @@ public class StudentDbUtil {
             close(connection, statement, null);
         }
     }
+
+    public Student getStudent(String theStudentId) throws Exception {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        Student student;
+        int studentId;
+        try {
+            studentId = Integer.parseInt(theStudentId);
+            connection = dataSource.getConnection();
+            String sql = "select * from student where id=?";
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, studentId);
+            resultSet= statement.executeQuery();
+            if (resultSet.next()) {
+                String firstName = resultSet.getString("first_name");
+                String lastName = resultSet.getString("last_name");
+                String email = resultSet.getString("email");
+                student = new Student(studentId, firstName, lastName, email);
+            } else {
+                throw new Exception("Could not find student with id " + studentId);
+            }
+            return student;
+        } finally {
+            close(connection, statement, resultSet);
+        }
+    }
 }
