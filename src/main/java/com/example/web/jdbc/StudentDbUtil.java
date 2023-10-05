@@ -96,4 +96,21 @@ public class StudentDbUtil {
             close(connection, statement, resultSet);
         }
     }
+
+    public void updateStudent(Student student) throws Exception {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        try {
+            connection = dataSource.getConnection();
+            String sql = "update student set first_name=?, last_name=?, email=? where id=?";
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, student.getFirstName());
+            statement.setString(2, student.getLastName());
+            statement.setString(3, student.getEmail());
+            statement.setInt(4, student.getId());
+            statement.execute();
+        } finally {
+            close(connection, statement, null);
+        }
+    }
 }

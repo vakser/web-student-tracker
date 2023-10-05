@@ -35,14 +35,14 @@ public class StudentControllerServlet extends HttpServlet {
                 theCommand = "LIST";
             }
             switch (theCommand) {
-                case "LIST":
-                    listStudents(request, response);
-                    break;
                 case "ADD":
                     addStudents(request, response);
                     break;
                 case "LOAD":
                     loadStudent(request, response);
+                    break;
+                case "UPDATE":
+                    updateStudent(request, response);
                     break;
                 default:
                     listStudents(request, response);
@@ -51,6 +51,16 @@ public class StudentControllerServlet extends HttpServlet {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void updateStudent(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        int id = Integer.parseInt(request.getParameter("studentId"));
+        String firstName = request.getParameter("firstName");
+        String lastName = request.getParameter("lastName");
+        String email = request.getParameter("email");
+        Student student = new Student(id, firstName, lastName, email);
+        studentDbUtil.updateStudent(student);
+        listStudents(request, response);
     }
 
     private void loadStudent(HttpServletRequest request, HttpServletResponse response) throws Exception {
