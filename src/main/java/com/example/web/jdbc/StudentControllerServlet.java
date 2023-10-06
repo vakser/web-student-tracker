@@ -35,9 +35,6 @@ public class StudentControllerServlet extends HttpServlet {
                 theCommand = "LIST";
             }
             switch (theCommand) {
-                case "ADD":
-                    addStudents(request, response);
-                    break;
                 case "LOAD":
                     loadStudent(request, response);
                     break;
@@ -53,6 +50,19 @@ public class StudentControllerServlet extends HttpServlet {
 
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+        try {
+            String theCommand = request.getParameter("command");
+            if (theCommand.equals("ADD")) {
+                addStudent(request, response);
+            } else {
+                listStudents(request, response);
+            }
+        } catch (Exception exc) {
+            throw new ServletException(exc);
         }
     }
 
@@ -80,13 +90,13 @@ public class StudentControllerServlet extends HttpServlet {
         dispatcher.forward(request, response);
     }
 
-    private void addStudents(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    private void addStudent(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String firstName = request.getParameter("firstName");
         String lastName = request.getParameter("lastName");
         String email = request.getParameter("email");
         Student theStudent = new Student(firstName, lastName, email);
         studentDbUtil.addStudent(theStudent);
-        listStudents(request, response);
+        response.sendRedirect(request.getContextPath() + "/StudentControllerServlet?command=LIST");
     }
 
     private void listStudents(HttpServletRequest request, HttpServletResponse response)
