@@ -22,15 +22,7 @@ public class StudentDbUtil {
             String sql = "select * from student order by last_name";
             statement = connection.createStatement();
             resultSet = statement.executeQuery(sql);
-            while (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                String firstName = resultSet.getString("first_name");
-                String lastName = resultSet.getString("last_name");
-                String email = resultSet.getString("email");
-                Student tempStudent = new Student(id, firstName, lastName, email);
-                students.add(tempStudent);
-            }
-            return students;
+            return retrieveStudents(students, resultSet);
         } finally {
             close(connection, statement, resultSet);
         }
@@ -127,5 +119,41 @@ public class StudentDbUtil {
         } finally {
             close(connection, statement, null);
         }
+    }
+
+    public List<Student> searchStudents(String theSearchName) throws Exception {
+        List<Student> students = new ArrayList<>();
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = dataSource.getConnection();
+            if (theSearchName != null && !theSearchName.trim().isEmpty()) {
+                String sql = "select * from student where lower(first_name) like ? or lower(last_name) like ?";
+                statement = connection.prepareStatement(sql);
+                String theSearchNameLike = "%" + theSearchName.toLowerCase() + "%";
+                statement.setString(1, theSearchNameLike);
+                statement.setString(2, theSearchNameLike);
+            } else {
+                String sql = "select * from student order by last_name";
+                statement = connection.prepareStatement(sql);
+            }
+            resultSet = statement.executeQuery();
+            return retrieveStudents(students, resultSet);
+        } finally {
+            close(connection, statement, resultSet);
+        }
+    }
+
+    private List<Student> retrieveStudents(List<Student> students, ResultSet resultSet) throws SQLException {
+        while (resultSet.next()) {
+            int id = resultSet.getInt("id");
+            String firstName = resultSet.getString("first_name");
+            String lastName = resultSet.getString("last_name");
+            String email = resultSet.getString("email");
+            Student tempStudent = new Student(id, firstName, lastName, email);
+            students.add(tempStudent);
+        }
+        return students;
     }
 }
